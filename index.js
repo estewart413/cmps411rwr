@@ -64,37 +64,11 @@ app.post('/quiz/:id', function(req,res) {
     if (err) {
       handleError(res, err.message, "Failed to get quiz.");
     } else {
-      if (docs[0].question.type == "true/false"){
-        if (body.answer == docs[0].question.correctanswer){
-          res.status(200).send("You answered correctly!");
-        }
-        else {
-          res.status(200).send("You did not answer correctly.");
-        }
+      if (body.answer == docs[0].question.correctanswer){
+        res.status(200).send("You answered correctly!");
       }
-      if (docs[0].question.type == "multiplechoicesingle"){
-        if (body.answer == docs[0].question.correctanswer){
-          res.status(200).send("You answered correctly!");
-        }
-        else {
-          res.status(200).send("You did not answer correctly.");
-        }
-      }
-      if (docs[0].question.type == "multiplechoicemany"){
-        if (body.answer == docs[0].question.correctanswer){
-          res.status(200).send("You answered correctly!");
-        }
-        else {
-          res.status(200).send("You did not answer correctly.");
-        }
-      }
-      if (docs[0].question.type == "shortanswer"){
-        if (body.answer == docs[0].question.correctanswer){
-          res.status(200).send("You answered correctly!");
-        }
-        else {
-          res.status(200).send("You did not answer correctly.");
-        }
+      else {
+        res.status(200).send("You did not answer correctly.");
       }
     }
 });
