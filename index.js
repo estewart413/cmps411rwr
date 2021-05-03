@@ -1,12 +1,13 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+require('dotenv').config()
 //var Request = require("request");
 var app = express();
 app.use(bodyParser.json());
 var db;
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://cmps415:cmps415@cluster0.iwnjg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = process.env.URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
 client.connect(err => {
   const collection = client.db("myFirstDatabase").collection("cmps415");
