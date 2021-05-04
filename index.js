@@ -1,22 +1,20 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-require('dotenv').config()
+require('dotenv').config({path:'./.env'})
 //var Request = require("request");
 var app = express();
 app.use(bodyParser.json());
-var db;
 
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose')
 const uri = process.env.URI;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
-client.connect(err => {
-  const collection = client.db("myFirstDatabase").collection("cmps415");
-  console.log("Connected to DB");
-  
-  db = client.db();
+console.log(uri);
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log("MongoDB database connection successful");
 });
-
-var server = app.listen(process.env.PORT || 8080, function () {
+var server = app.listen(process.env.PORT || 8080, () => {
 	var port = server.address().port;
 	console.log("App now running on port", port);
 });

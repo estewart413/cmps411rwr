@@ -10,7 +10,12 @@ import { HttpClient } from '@angular/common/http';
 
 export class AppComponent {
   title = 'angular-app';
-  constructor(http: HttpClient){
-    http.get('http://MyRestApi.com/MyRestEndpoint');
+  public localApiResponse: Object;
+  constructor(private http: HttpClient){
+    this.localApiResponse = '';
+    this.http.get('/').subscribe(
+      apiResponse => {
+        this.localApiResponse = apiResponse;
+    });
   }
 }
