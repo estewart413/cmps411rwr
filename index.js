@@ -6,7 +6,7 @@ var app = express();
 app.use(bodyParser.json());
 
 const mongoose = require('mongoose')
-const uri = process.env.URI;
+const uri = process.env.MONGODB_URI;
 console.log(uri);
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
 const db = mongoose.connection;
