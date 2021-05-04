@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.get("/quizzes/", function(req, res) {
-    db.collection("cmps415").find({}).toArray((err, docs) => {
+    db.collection("cmps415").find().toArray((err, docs) => {
         if (err) {
             handleError(res, err.message, "Failed to get quizzes.", console.log(res));
         } else {
