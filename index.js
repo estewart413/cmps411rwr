@@ -19,22 +19,25 @@ var server = app.listen(process.env.PORT || 8080, () => {
 	console.log("App now running on port", port);
 });
 
-app.get('/', (req, res) => res.send('Quiz App. Connect to an endpoint. (Postman.)'));
+app.get('/', (req, res) => {
+  res.send('Quiz App. Connect to an endpoint.');
+  console.log(db.name)
+});
 
 app.get("/quizzes/", function(req, res) {
-    db.collection("cmps415").find({}).toArray(function(err, docs) {
+    db.collection("cmps415").find({}).toArray((err, docs) => {
         if (err) {
-            handleError(res, err.message, "Failed to get quizzes.");
+            handleError(res, err.message, "Failed to get quizzes.", console.log(res));
         } else {
             res.status(200).json(docs);
         }
     });
 });
 
-app.get('/quiz/:id', function(req,res) {
+app.get('/quiz/:id', (req,res) => {
   var ObjectId = require('mongodb').ObjectID;
   let id = req.params.id;
-  db.collection("cmps415").find({"_id": new ObjectId(id)}).toArray(function(err, docs) {
+  db.collection("cmps415").find({"_id": new ObjectId(id)}).toArray((err, docs) => {
   if (err) {
     handleError(res, err.message, "Failed to get quiz.");
   } else {
