@@ -1,1 +1,8 @@
-<p>home works!</p>
+  <div class="flexrow">
+    <div *ngFor="let quiz of localApiResponse">
+      <mat-card class="card">
+        <mat-card-title> {{ quiz.title }}</mat-card-title>
+        <mat-card-subtitle>{{ quiz.description }}</mat-card-subtitle>
+      </mat-card>
+    </div>
+  </div>

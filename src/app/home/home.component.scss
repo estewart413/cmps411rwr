@@ -1,0 +1,17 @@
+@import '../../styles.scss';
+
+  .card {
+    position: relative;
+    margin-top:  0.5rem;
+    margin-right: 0.5rem;
+    text-align: center;
+    width: auto;
+  }
+  .flexrow{
+    display:flex;
+    flex:1;
+    flex-direction: row;
+    position:relative;
+    margin-top:  80px;
+    overflow:hidden;
+  }

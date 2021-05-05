@@ -1,14 +1,4 @@
-@import '~@angular/material/theming';
-$app-primary: mat-palette($mat-indigo);
-$app-accent:  mat-palette($mat-pink, A200, A100, A400);
-$app-warn:    mat-palette($mat-red);
-$primary: mat-color($app-primary);
-$accent: mat-color($app-accent);
-$warn: mat-color($app-warn);
-.spacer {
-  flex: 1;
-}
-
+@import '../styles.scss';
 .toolbar {
   position: absolute;
   top: 0;
@@ -20,19 +10,4 @@ $warn: mat-color($app-warn);
   background-color: $primary;
   color: white;
   font-weight: 600;
-}
-.card {
-  position: relative;
-  margin-top:  0.5rem;
-  margin-right: 0.5rem;
-  text-align: center;
-  width: auto;
-}
-.flexrow{
-  display:flex;
-  flex:1;
-  flex-direction: row;
-  position:relative;
-  margin-top:  80px;
-  overflow:hidden;
 }
