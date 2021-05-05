@@ -1,6 +1,5 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-const path = require('path');
 require('dotenv').config({path:'./.env'})
 //var Request = require("request");
 var app = express();
@@ -8,6 +7,7 @@ app.use(bodyParser.json());
 
 const mongoose = require('mongoose')
 const uri = process.env.MONGODB_URI;
+console.log(uri);
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -19,10 +19,9 @@ var server = app.listen(process.env.PORT || 8080, () => {
 	console.log("App now running on port", port);
 });
 
-app.use(express.static(__dirname + '/angular-app/dist/angular-app'))
-
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname))
+  res.send('Quiz App. Connect to an endpoint.');
+  console.log(db.name)
 });
 
 app.get("/quizzes/", function(req, res) {

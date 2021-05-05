@@ -13,12 +13,9 @@ export class AppComponent {
   public localApiResponse: Object;
   constructor(private http: HttpClient){
     this.localApiResponse = '';
-    this.http.get('/quizzes').subscribe(
+    this.http.get('/').subscribe(
       apiResponse => {
-        this.localApiResponse = JSON.stringify(apiResponse);
-
-        console.log(apiResponse);
+        this.localApiResponse = apiResponse;
     });
   }
-
 }
