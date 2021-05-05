@@ -14,10 +14,25 @@ $warn: mat-color($app-warn);
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
-  display: flex;
+  height: 80px;
+  text-align:center;
   align-items: center;
   background-color: $primary;
   color: white;
   font-weight: 600;
+}
+.card {
+  position: relative;
+  margin-top:  0.5rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  width: auto;
+}
+.flexrow{
+  display:flex;
+  flex:1;
+  flex-direction: row;
+  position:relative;
+  margin-top:  80px;
+  overflow:hidden;
 }

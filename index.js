@@ -8,7 +8,6 @@ app.use(bodyParser.json());
 
 const mongoose = require('mongoose')
 const uri = process.env.MONGODB_URI;
-console.log(uri);
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -24,7 +23,6 @@ app.use(express.static(__dirname+'/dist/angular-app'))
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname));
-  console.log(db.name)
 });
 
 app.get("/quizzes/", function(req, res) {
@@ -51,7 +49,7 @@ app.get('/quiz/:id', (req,res) => {
 app.post("/new/", function(req, res) {
     let body = (req.body);
 	console.log(body);
-	db.collection("cmps415").insertOne(body, function(err, doc) {
+	db.collection("cmps415").insertOne(body, (err, doc) => {
 		if (err) {
 			handleError(res, err.message, "Failed to create new quiz.");
 		} else {
@@ -64,7 +62,7 @@ app.post('/quiz/:id', function(req,res) {
   var ObjectId = require('mongodb').ObjectID;
   let id = req.params.id;
   let body = (req.body);
-  db.collection("cmps415").find({"_id": new ObjectId(id)}).toArray(function(err, docs) {
+  db.collection("cmps415").find({"_id": new ObjectId(id)}).toArray((err, docs) => {
     if (err) {
       handleError(res, err.message, "Failed to get quiz.");
     } else {
