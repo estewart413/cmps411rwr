@@ -3,12 +3,14 @@
   "version": "0.3.0",
   "description": "A sample Node.js app using Express 4",
   "engines": {
-    "node": "14.x"
+    "node": "14.x",
+    "npm": "6.13.4"
   },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js"
+    "test": "node test.js",
+    "heroku-postbuild": "ng build /angular-app --prod"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
@@ -16,7 +18,10 @@
     "express": "^4.15.2",
     "mongodb": "^3.6.5",
     "mongoose": "^5.12.7",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "path": "^0.12.7",
+    "@angular/cli": "^11.2.11",
+    "@angular/compiler-cli": "^11.2.12"
   },
   "devDependencies": {
     "got": "^11.3.0",
