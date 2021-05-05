@@ -18,4 +18,6 @@ export class AppComponent {
         this.localApiResponse = JSON.stringify(apiResponse);
     });
   }
+
+  
 }
