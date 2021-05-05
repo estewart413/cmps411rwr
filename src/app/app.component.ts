@@ -15,7 +15,7 @@ export class AppComponent {
     this.localApiResponse = '';
     this.http.get('/').subscribe(
       apiResponse => {
-        this.localApiResponse = apiResponse;
+        this.localApiResponse = JSON.stringify(apiResponse);
     });
   }
 }

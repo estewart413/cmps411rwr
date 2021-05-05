@@ -1,5 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+const path = require('path')
 require('dotenv').config({path:'./.env'})
 //var Request = require("request");
 var app = express();
@@ -19,8 +20,10 @@ var server = app.listen(process.env.PORT || 8080, () => {
 	console.log("App now running on port", port);
 });
 
-app.get('/', (req, res) => {
-  res.send('Quiz App. Connect to an endpoint.');
+app.use(express.static(__dirname+'/dist/angular-app'))
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname));
   console.log(db.name)
 });
 
