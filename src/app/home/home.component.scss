@@ -12,8 +12,8 @@
     display:flex;
     flex:1;
     flex-direction: row;
+    flex-wrap: wrap;
     position:relative;
-    margin-top:  80px;
     overflow:hidden;
   }
   a {

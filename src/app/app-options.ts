@@ -1,3 +1,3 @@
 export interface Options {
-    option: Object;
+    option: string;
 }

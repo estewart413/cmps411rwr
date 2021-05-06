@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
 
   public localApiResponse: Quiz[];
   constructor(private http: HttpClient, private router: Router){
-    this.localApiResponse = [{_id: "", title: "", description: "", questions: [{type:"", correctanswer:"", options:[{option:""}]}]}];
+    this.localApiResponse = [{_id: "", title: "", description: "", questions: [{text:"", type:"", correctanswer:"", options:[{option:""}]}]}];
     this.http.get('/quizzes').subscribe(
       apiResponse => {
         var quizzes = JSON.stringify(apiResponse);

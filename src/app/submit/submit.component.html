@@ -1,4 +1,23 @@
-<div style="margin-top:200px;">
-    {{localApiResponse}}
+<div class="flexcol">
+  <mat-card class="subcard">
+    <mat-card-title> {{ localApiResponse.title }}</mat-card-title>
+    <mat-card-subtitle>{{ localApiResponse.description }}</mat-card-subtitle>
+    <mat-divider></mat-divider>
+    <div *ngIf="!isLoading">
+        <form (ngSubmit)="onSubmit()" [formGroup]="form">
+      
+          <div *ngFor="let question of questionList" class="form-row">
+            <app-question [question]="question" [form]="form"></app-question>
+          </div>
+      
+          <div class="form-row">
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      
+        <div *ngIf="payLoad" class="form-row">
+          <strong>Saved the following values</strong><br>{{payLoad}}
+        </div>
+      </div>
+  </mat-card>
 </div>
-

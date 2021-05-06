@@ -6,5 +6,8 @@ $app-warn:    mat-palette($mat-red);
 $primary: mat-color($app-primary);
 $accent: mat-color($app-accent);
 $warn: mat-color($app-warn);
-html, body { height: 100%; }
+html, body { 	height: 100%;
+	min-height: 100%;
+	font-size: 100%;
+    overflow:hidden;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

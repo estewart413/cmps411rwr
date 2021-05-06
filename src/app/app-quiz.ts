@@ -1,7 +1,7 @@
 import {Questions} from './app-questions';
 export interface Quiz {
-    _id: String;
-    title: String;
-    description: String;
+    _id: string;
+    title: string;
+    description: string;
     questions: Questions[];
 }

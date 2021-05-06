@@ -1,8 +1,8 @@
-<div>
+<div class="wrapper">
   <mat-toolbar class="toolbar" role="banner">
     <span>Welcome to QuizApp!</span>
     <span class="spacer"></span>
-    <a routerLink="home">
+    <a routerLink="">
       <button mat-icon-button class="navhome" aria-label="Home Button">
         <mat-icon>home</mat-icon>
       </button>
@@ -13,5 +13,10 @@
       </button>
     </a>
   </mat-toolbar>
-  <router-outlet></router-outlet>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  <mat-toolbar class="footer">
+    <span>QuizApp 2021</span>
+  </mat-toolbar>
 </div>

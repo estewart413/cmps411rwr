@@ -1,6 +1,7 @@
 import {Options} from './app-options'
 export interface Questions {
-    type:String;
-    correctanswer:String;
+    text:string;
+    type:string;
+    correctanswer:string;
     options:Options[];
 }
