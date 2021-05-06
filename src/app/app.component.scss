@@ -7,7 +7,19 @@
   height: 80px;
   text-align:center;
   align-items: center;
+  justify-content: center;
   background-color: $primary;
   color: white;
   font-weight: 600;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+.navhome {
+  color:$accent;
+  text-decoration: none;
+}
+.navbutton {
+  color:$accent;
+  text-decoration: none;
 }

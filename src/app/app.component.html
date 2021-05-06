@@ -1,6 +1,17 @@
 <div>
-  <div class="toolbar" role="banner">
-    <h2>Welcome to QuizApp!</h2>
-  </div>
+  <mat-toolbar class="toolbar" role="banner">
+    <span>Welcome to QuizApp!</span>
+    <span class="spacer"></span>
+    <a routerLink="home">
+      <button mat-icon-button class="navhome" aria-label="Home Button">
+        <mat-icon>home</mat-icon>
+      </button>
+    </a>
+    <a routerLink="new">
+      <button mat-raised-button class="navbutton" aria-label="New Button">
+      New Quiz
+      </button>
+    </a>
+  </mat-toolbar>
   <router-outlet></router-outlet>
 </div>

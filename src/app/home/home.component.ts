@@ -1,20 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-interface Quiz {
-  id: Number;
-  title: String;
-  description: String;
-  questions: [Questions]
-  
-}
-interface Questions {
-    type:String;
-    correctanswer:String;
-    options:[Options]
-}
-interface Options {
-  option: Object;
-}
+import { Quiz } from '../app-quiz';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -23,16 +11,19 @@ interface Options {
 export class HomeComponent implements OnInit {
 
   public localApiResponse: Quiz[];
-  constructor(private http: HttpClient){
-    this.localApiResponse = [{id: 0, title: "", description: "", questions: [{type:"", correctanswer:"", options:[{option:""}]}]}];
+  constructor(private http: HttpClient, private router: Router){
+    this.localApiResponse = [{_id: "", title: "", description: "", questions: [{type:"", correctanswer:"", options:[{option:""}]}]}];
     this.http.get('/quizzes').subscribe(
       apiResponse => {
         var quizzes = JSON.stringify(apiResponse);
         this.localApiResponse = JSON.parse(quizzes);
     });
   }
+  goToSubmit(id:String) {
+    this.router.navigate(['../submit', id]);
+  }
 
-  ngOnInit(): void {
+  ngOnInit(){
   }
 
 }
