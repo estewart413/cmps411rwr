@@ -19,6 +19,7 @@ export class NewComponent implements OnInit {
   public qArray:number[] = [];
   public oArray:number[] = [];
   public isLoading:boolean = true;
+  public type:string ='';
   payLoad =''
   constructor(private http: HttpClient, private fb: FormBuilder) { 
     this.form = this.fb.group({
@@ -51,7 +52,7 @@ export class NewComponent implements OnInit {
     this.qArray.push(i)
   }
   onOptionChange(event){
-    console.log("Event: ", event)
+    console.log("Event: ", event);
     this.numOptions = event.srcElement.value;
     var i:number = 0;
     if(this.oArray.length !== this.numQuestions){
@@ -63,6 +64,10 @@ export class NewComponent implements OnInit {
     }
     for(i=0;i<this.numQuestions;i++)
     this.oArray.push(i)
+  }
+  onTypeChange(event){
+    console.log("Event: ", event);
+    this.type = event.srcElement.value || '';
   }
   ngOnInit() {
   }

@@ -20,13 +20,13 @@
                 <div *ngFor="let question of qArray" formArrayName="questions">
                     <h3>Question</h3>
                     <mat-divider></mat-divider>
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>Text</mat-label>
                         <input formControlName="text" matInput>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>Type</mat-label>
-                        <mat-select formControlName="type">
+                        <mat-select formControlName="type" [(ngModel)]="type" ngModelChange="onTypeChange($event)" >
                             <mat-option>Select</mat-option>
                             <mat-option value="shortanswer">Short Answer</mat-option>
                             <mat-option value="truefalse">True or False</mat-option>
@@ -34,12 +34,46 @@
                             <mat-option value="multiplechoicemultiple">Multiple Choice Multiple Correct Answers</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <mat-form-field appearance="outline" *ngIf="type === 'multiplechoicesingle'">
+                        <mat-label>Number of Options</mat-label>
+                        <input matInput type="number" (change)="onOptionChange($event)">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" *ngIf="type === 'multiplechoicemultiple'">
+                        <mat-label>Number of Options</mat-label>
+                        <input matInput type="number" (change)="onOptionChange($event)">
+                    </mat-form-field>
+                    <div *ngIf="numOptions !== 0">
+                        <div>
+                            <mat-form-field appearance="outline">
+                                <input matInput formControlName="correctanswer" type="text">
+                            </mat-form-field >
+                        </div>
+                        <div *ngFor="let option of oArray" formArrayName="options">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Option Name</mat-label>
+                                <input formControlName="option" matInput>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <mat-form-field *ngIf="type === 'truefalse'">
+                        <mat-radio-group formControlName="correctanswer">
+                            <mat-radio-button value="true">True</mat-radio-button>
+                            <mat-radio-button value="false">True</mat-radio-button>
+                        </mat-radio-group>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="type === 'shortanswer'" appearance="outline">
+                        <textarea formControlName="correctanswer" matInput></textarea>
+                    </mat-form-field>
                 </div>
             </div>
             <div>
                 <button type="submit">Submit</button>
             </div>
         </form>
+        
+      <div *ngIf="payLoad" class="form-row">
+        <strong>Saved the following values</strong><br />{{ payLoad }}
+      </div>
     </div>
     </mat-card>
 </div>
