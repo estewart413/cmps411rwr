@@ -4,20 +4,68 @@
     <mat-card-subtitle>{{ localApiResponse.description }}</mat-card-subtitle>
     <mat-divider></mat-divider>
     <div *ngIf="!isLoading">
-        <form (ngSubmit)="onSubmit()" [formGroup]="form">
-      
-          <div *ngFor="let question of questionList" class="form-row">
-            <app-question [question]="question" [form]="form"></app-question>
+      <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form-container">
+        <div *ngFor="let question of questionList" class="form-row">
+          <div>
+            <label [attr.for]="question.key">{{ question.label }}</label>
+
+            <ng-container [ngSwitch]="question.controlType">
+              <mat-form-field 
+              *ngSwitchCase="'multiplechoicemultiple'"
+              [formArrayName]="question.key"
+              [id]="question.key" appearance="outline">
+                <mat-select multiple>
+                  <mat-option
+                    *ngFor="let opt of question.options"
+                    (click)="onChange(question.key, $event)"
+                    [value]="opt.value"
+                    >{{ opt.value }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              
+              <mat-radio-group
+                *ngSwitchCase="'multiplechoicesingle'"
+                [id]="question.key"
+                [formControlName]="question.key"
+              >
+                <div *ngFor="let opt of question.options">
+                  <mat-radio-button [value]="opt.value">{{
+                    opt.value
+                  }}</mat-radio-button>
+                </div>
+              </mat-radio-group>
+
+              <mat-radio-group
+                *ngSwitchCase="'truefalse'"
+                [id]="question.key"
+                [formControlName]="question.key"
+              >
+                <mat-radio-button value="true">True</mat-radio-button>
+                <mat-radio-button value="false">False</mat-radio-button>
+              </mat-radio-group>
+              <mat-form-field 
+              *ngSwitchCase="'shortanswer'"
+              [id]="question.key"
+              appearance="outline">
+              <input
+                [formControlName]="question.key"
+                matInput
+                [type]="question.type"
+                [value]=""
+              />
+            </mat-form-field>
+            </ng-container>
           </div>
-      
-          <div class="form-row">
-            <button type="submit">Save</button>
-          </div>
-        </form>
-      
-        <div *ngIf="payLoad" class="form-row">
-          <strong>Saved the following values</strong><br>{{payLoad}}
         </div>
+
+        <div class="form-row">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+
+      <div *ngIf="payLoad" class="form-row">
+        <strong>Saved the following values</strong><br />{{ payLoad }}
       </div>
+    </div>
   </mat-card>
 </div>

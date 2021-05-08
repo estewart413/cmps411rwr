@@ -11,7 +11,6 @@ import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
 import { SubmitComponent } from './submit/submit.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {DynamicFormQuestionComponent} from './submit/dynamic-form-question.component'
 
 @NgModule({
   declarations: [
@@ -19,7 +18,6 @@ import {DynamicFormQuestionComponent} from './submit/dynamic-form-question.compo
     HomeComponent,
     NewComponent,
     SubmitComponent,
-    DynamicFormQuestionComponent
   ],
   imports: [
     BrowserModule,

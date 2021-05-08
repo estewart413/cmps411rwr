@@ -5,11 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { Quiz } from '../app-quiz';
 import { Questions } from '../app-questions';
 import {QuestionBase} from './QuestionBase';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder,FormArray } from '@angular/forms';
 
 interface qOptions {
   key:string,
   value:string
+}
+interface Answers {
+  answer:string
 }
 @Component({
   selector: 'app-submit',
@@ -29,7 +32,8 @@ export class SubmitComponent implements OnInit {
   @Input() questionList: QuestionBase[] = [];
   form!: FormGroup;
   payLoad = '';
-  constructor(private route: ActivatedRoute, private http: HttpClient) {
+  multichoice:any;
+  constructor(private route: ActivatedRoute, private http: HttpClient, private fb: FormBuilder,) {
   }
 
   mapQuestions(questions: Questions[]) {
@@ -57,17 +61,21 @@ export class SubmitComponent implements OnInit {
       })
       qId++;
     })
-    console.log(this.questionList)
     return this.questionList;
   }
   toFormGroup(questions: QuestionBase[] ) {
-    const group: any = {};
+    const form:FormGroup = this.fb.group({})
 
     questions.forEach(question => {
-      group[question.key] = new FormControl(question.value || '');
+      if(question.controlType === "multiplechoicemultiple"){
+        form.addControl(question.key, new FormArray([]))
+      } else if (question.controlType === "shortanswer"){
+        form.addControl(question.key, new FormControl(''));
+      } else {
+        form.addControl(question.key, new FormControl(question.value || ''));
+      }
     });
-    console.log(group);
-    return new FormGroup(group);
+    return form;
   }
 
   ngOnInit() {
@@ -79,12 +87,31 @@ export class SubmitComponent implements OnInit {
       var tmp = JSON.stringify(this.localApiResponse.questions);
       this.questions = JSON.parse(tmp);
       this.form = this.toFormGroup(this.mapQuestions(this.questions))
-      console.log(this.form);
       this.isLoading=false;
     });
   }
+  onChange(key, event){
+    const multichoice:FormArray = this.form.get(key) as FormArray;
+    if(event.srcElement.previousElementSibling !== null && event.srcElement.previousElementSibling.__ngContext__[21] === "unchecked") {
+      multichoice.push(this.fb.control(event.srcElement.innerText));
+    } else {
+      multichoice.removeAt(event.srcElement.innerText);
+    }
+  }
   onSubmit() {
-    this.payLoad = JSON.stringify(this.form.getRawValue());
+    this.payLoad = this.form.getRawValue();
     console.log(this.payLoad)
+    var answerList:Answers[] = [];
+    for(const [key,value] of Object.entries(this.payLoad)){
+      if(Array.isArray(value)){
+        var text:string = value.join(',');
+        answerList.push({answer: text})
+      } else {
+      answerList.push({answer: value})
+      }
+    }
+    console.log("answers: ", answerList);
+    console.log(JSON.stringify(answerList))
+    this.http.post(`/quiz/${this.id}`, JSON.stringify(answerList));
   }
 }

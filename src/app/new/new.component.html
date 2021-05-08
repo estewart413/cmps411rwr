@@ -1,1 +1,45 @@
-<p>new works!</p>
+<div class="flexcol">
+    <mat-card class="subcard">
+        <mat-card-title>Create a New Quiz</mat-card-title>
+        <mat-divider></mat-divider>
+        <div *ngIf="!isLoading">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Number of Questions</mat-label>
+                <input matInput type="number" (change)="onNumChange($event)">
+            </mat-form-field>
+            <div *ngIf="numQuestions !== 0">
+                <div *ngFor="let question of qArray" formArrayName="questions">
+                    <h3>Question</h3>
+                    <mat-divider></mat-divider>
+                    <mat-form-field>
+                        <mat-label>Text</mat-label>
+                        <input formControlName="text" matInput>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Type</mat-label>
+                        <mat-select formControlName="type">
+                            <mat-option>Select</mat-option>
+                            <mat-option value="shortanswer">Short Answer</mat-option>
+                            <mat-option value="truefalse">True or False</mat-option>
+                            <mat-option value="multiplechoicesingle">Multiple Choice Single Correct Answer</mat-option>
+                            <mat-option value="multiplechoicemultiple">Multiple Choice Multiple Correct Answers</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    </mat-card>
+</div>

@@ -62,15 +62,15 @@ app.get("/quiz/:id", (req, res) => {
       if (err) {
         handleError(res, err.message, "Failed to get quiz.");
       } else {
-        if (res.status(200)){
+        if (res.status(200)) {
           var parsedId = "" + docs._id;
           docs[0]._id = parsedId;
           res.json(docs[0]);
-        }   
+        }
       }
     });
 });
-app.post("/new/", function (req, res) {
+app.post("/new/", (req, res) => {
   var ObjectId = require("mongodb").ObjectID;
   let body = req.body;
   console.log(body);
@@ -82,7 +82,7 @@ app.post("/new/", function (req, res) {
     }
   });
 });
-app.post("/quiz/:id", function (req, res) {
+app.post("/quiz/:id", (req, res) => {
   var ObjectId = require("mongodb").ObjectID;
   let id = req.params.id;
   let body = req.body;
@@ -92,11 +92,35 @@ app.post("/quiz/:id", function (req, res) {
       if (err) {
         handleError(res, err.message, "Failed to get quiz.");
       } else {
-        if (body.answer == docs[0].question.correctanswer) {
-          res.status(200).send("You answered correctly!");
-        } else {
-          res.status(200).send("You did not answer correctly.");
-        }
+        res.status(200).json(docs)
+        /* docs[0].questions.forEach((question) => {
+          for(var i = 0;i<body.length;i++){
+          if (
+            body[i].answer === question.correctanswer &&
+            question.type !== "multiplechoicemultiple"
+          ) {
+            res.status(200).send(`Question ${i} answered correctly!`);
+          } 
+          else if (question.type === "multiplechoicemultiple") {
+            var attempt= body[i].answer.split(",");
+            var correct = question.correctanswer.split(",");
+            if (
+              attempt.length === correct.length &&
+              correct.every((value) => attempt.includes(value))
+            ) {
+              res.status(200).send(`Question ${i} answered correctly!`);
+            } else {
+              res.status(200).send(
+                  `Question ${i} answered incorrectly.  The correct answer is ${question.correctanswer}.`
+                );
+            }
+          } 
+          else {
+            res.status(200).send(
+                `Question ${i} answered incorrectly.  The correct answer is ${question.correctanswer}.`
+              );
+          }
+        }}); */
       }
     });
 });
