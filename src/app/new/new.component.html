@@ -1,79 +1,141 @@
 <div class="flexcol">
-    <mat-card class="subcard">
-        <mat-card-title>Create a New Quiz</mat-card-title>
-        <mat-divider></mat-divider>
-        <div *ngIf="!isLoading">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline">
-                <mat-label>Title</mat-label>
-                <input matInput formControlName="title">
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Description</mat-label>
-                <textarea matInput formControlName="description"></textarea>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Number of Questions</mat-label>
-                <input matInput type="number" (change)="onNumChange($event)">
-            </mat-form-field>
-            <div *ngIf="numQuestions !== 0">
-                <div *ngFor="let question of qArray" formArrayName="questions">
-                    <h3>Question</h3>
-                    <mat-divider></mat-divider>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Text</mat-label>
-                        <input formControlName="text" matInput>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Type</mat-label>
-                        <mat-select formControlName="type" [(ngModel)]="type" ngModelChange="onTypeChange($event)" >
-                            <mat-option>Select</mat-option>
-                            <mat-option value="shortanswer">Short Answer</mat-option>
-                            <mat-option value="truefalse">True or False</mat-option>
-                            <mat-option value="multiplechoicesingle">Multiple Choice Single Correct Answer</mat-option>
-                            <mat-option value="multiplechoicemultiple">Multiple Choice Multiple Correct Answers</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" *ngIf="type === 'multiplechoicesingle'">
-                        <mat-label>Number of Options</mat-label>
-                        <input matInput type="number" (change)="onOptionChange($event)">
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" *ngIf="type === 'multiplechoicemultiple'">
-                        <mat-label>Number of Options</mat-label>
-                        <input matInput type="number" (change)="onOptionChange($event)">
-                    </mat-form-field>
-                    <div *ngIf="numOptions !== 0">
-                        <div>
-                            <mat-form-field appearance="outline">
-                                <input matInput formControlName="correctanswer" type="text">
-                            </mat-form-field >
-                        </div>
-                        <div *ngFor="let option of oArray" formArrayName="options">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Option Name</mat-label>
-                                <input formControlName="option" matInput>
-                            </mat-form-field>
-                        </div>
+  <mat-card class="subcard">
+    <mat-card-title>Create a New Quiz</mat-card-title>
+    <mat-divider></mat-divider>
+    <!--Ensure all values are parsed/set before rendering-->
+    <div *ngIf="!isLoading">
+      <form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Number of Questions</mat-label>
+          <input matInput type="number" (change)="onNumChange($event)" />
+        </mat-form-field>
+        <!--Only display if questions exist-->
+        <div class="form-container" *ngIf="numQuestions !== 0">
+            <!--Not sure waiting is strictly necessary-->
+          <div *ngIf="!isLoadingQ">
+              <!--Render component for each question FormGroup-->
+            <div
+              *ngFor="
+                let question of form.get('questions')!['controls'];
+                let i = index
+              "
+              formArrayName="questions"
+              class="form-container"
+            >
+              <h3>Question</h3>
+              <h5>If form does not load, click a radio button a few times</h5>
+              <mat-divider></mat-divider>
+              <div class="form-container" [formGroupName]="i">
+                <mat-form-field appearance="outline">
+                  <mat-label>Question Text</mat-label>
+                  <input formControlName="text" matInput />
+                </mat-form-field>
+                <!--Select question type.  Currently throws unknown error on render, but still works-->
+                <label id="typegroup">Type</label>
+                <mat-radio-group
+                  aria-labelledby="typegroup"
+                  
+                  [name]="i.toString()"
+                >
+                  <mat-radio-button
+                    [name]="i.toString()"
+                    *ngFor="let t of types"
+                    formControlName="type"
+                    [value]="t.value"
+                    (change) = "onTypeChange($event, i)"
+                    >{{ t.name }}</mat-radio-button
+                  >
+                </mat-radio-group>
+                <!--Only display option numbers if single or multiple answers. did not like || so separate-->
+                  <mat-form-field
+                    appearance="outline"
+                    *ngIf="
+                    getQuestionsControls(i).get('type').value ===
+                      'multiplechoicesingle'
+                    "
+                  >
+                    <mat-label>Number of Options</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      (change)="onOptionChange($event, i)"
+                    />
+                  </mat-form-field>
+                  <mat-form-field
+                    appearance="outline"
+                    *ngIf="
+                    getQuestionsControls(i).get('type').value ===
+                      'multiplechoicemultiple'
+                    "
+                  >
+                    <mat-label>Number of Options</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      (change)="onOptionChange($event, i)"
+                    />
+                  </mat-form-field>
+                  <!--Always display correct answer field-->
+                  <div *ngIf="getOptions(i).length > 0" class="form-container">
+                    <div>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Correct Answer</mat-label>
+                        <input
+                          matInput
+                          formControlName="correctanswer"
+                          type="text"
+                        />
+                      </mat-form-field>
                     </div>
-                    <mat-form-field *ngIf="type === 'truefalse'">
-                        <mat-radio-group formControlName="correctanswer">
-                            <mat-radio-button value="true">True</mat-radio-button>
-                            <mat-radio-button value="false">True</mat-radio-button>
-                        </mat-radio-group>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="type === 'shortanswer'" appearance="outline">
-                        <textarea formControlName="correctanswer" matInput></textarea>
-                    </mat-form-field>
+                    <!--Render component for each option FormGroup-->
+                    <div *ngFor="let option of getOptions(i)['controls']; let j = index" formArrayName="options">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Option Name</mat-label>
+                        <input formControlName="option" matInput (change)="onOptionValueChange($event, i, j)"/>
+                      </mat-form-field>
+                    </div>
                 </div>
+                <div
+                *ngIf=" getQuestionsControls(i).get('type').value ===
+                  'truefalse' ">
+                    <mat-label class="form-row">Correct Answer</mat-label>
+                    <mat-radio-group
+                      class="form-row"
+                      formControlName="correctanswer"
+                    >
+                      <mat-radio-button value="true">True</mat-radio-button>
+                      <mat-radio-button value="false">false</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                    <mat-form-field
+                      *ngIf="
+                      getQuestionsControls(i).get('type').value ===
+                        'shortanswer'
+                      "
+                      appearance="outline"
+                    >
+                      <mat-label>Correct Answer</mat-label>
+                      <textarea
+                        formControlName="correctanswer"
+                        matInput
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+              </div>
             </div>
-            <div>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-        
-      <div *ngIf="payLoad" class="form-row">
-        <strong>Saved the following values</strong><br />{{ payLoad }}
-      </div>
+          </div>
+        <div>
+          <button mat-raised-button class="subbutton" type="submit">Submit</button>
+        </div>
+      </form>
     </div>
-    </mat-card>
+  </mat-card>
 </div>

@@ -20,6 +20,7 @@ interface Answers {
   styleUrls: ['./submit.component.scss']
 })
 export class SubmitComponent implements OnInit {
+  //initialize variables
   private id: String = '';
   public isLoading:boolean = true;
   public localApiResponse: Quiz ={
@@ -33,9 +34,11 @@ export class SubmitComponent implements OnInit {
   form!: FormGroup;
   payLoad = '';
   multichoice:any;
+  key:any = [];
   constructor(private route: ActivatedRoute, private http: HttpClient, private fb: FormBuilder,) {
   }
-
+  //Map JSON from server to custom QuestionBase format for forms.  
+  //Was following a template for this, could probably have just stuck with JSON, but got snakebit
   mapQuestions(questions: Questions[]) {
     var id:number = 1;
     var qId:number = 1;
@@ -63,6 +66,7 @@ export class SubmitComponent implements OnInit {
     })
     return this.questionList;
   }
+  //Dynamically construct form group based on quiz info
   toFormGroup(questions: QuestionBase[] ) {
     const form:FormGroup = this.fb.group({})
 
@@ -79,8 +83,10 @@ export class SubmitComponent implements OnInit {
   }
 
   ngOnInit() {
+    //Get Quiz ID from passed in route
     var idCheck = this.route.snapshot.paramMap.get('id');
     this.id = idCheck !== null ? idCheck : '';
+    //Get Quiz info from MongoDB
     this.http.get(`/quiz/${this.id}`).subscribe((apiResponse) => {
       var quiz = JSON.stringify(apiResponse);
       this.localApiResponse = JSON.parse(quiz);
@@ -90,6 +96,7 @@ export class SubmitComponent implements OnInit {
       this.isLoading=false;
     });
   }
+  //If a Multiple Choice - Multiple Answers question, fire on value selected, push name of value to FormArray
   onChange(key, event){
     const multichoice:FormArray = this.form.get(key) as FormArray;
     if(event.srcElement.previousElementSibling !== null && event.srcElement.previousElementSibling.__ngContext__[21] === "unchecked") {
@@ -98,11 +105,14 @@ export class SubmitComponent implements OnInit {
       multichoice.removeAt(event.srcElement.innerText);
     }
   }
+  
   onSubmit() {
+    //Get Raw values
     this.payLoad = this.form.getRawValue();
-    console.log(this.payLoad)
     var answerList:Answers[] = [];
+    //Push submitted form items to dummy array
     for(const [key,value] of Object.entries(this.payLoad)){
+      //If a Multiple Choice - Multiple Answers question, consolidate values into single string
       if(Array.isArray(value)){
         var text:string = value.join(',');
         answerList.push({answer: text})
@@ -110,8 +120,10 @@ export class SubmitComponent implements OnInit {
       answerList.push({answer: value})
       }
     }
-    console.log("answers: ", answerList);
-    console.log(JSON.stringify(answerList))
-    this.http.post(`/quiz/${this.id}`, JSON.stringify(answerList));
+    //Post answers to server, asign response to array.
+    this.http.post(`/quiz/${this.id}`, answerList, { headers:
+      {"Content-Type": "application/json"}}).subscribe(response => {
+        this.key = response;
+      })
   }
 }

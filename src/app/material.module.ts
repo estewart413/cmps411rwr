@@ -8,6 +8,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider'
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
+import {MatListModule} from '@angular/material/list';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 @NgModule({
     imports: [
         MatCardModule,
@@ -18,7 +20,9 @@ import {MatSelectModule} from '@angular/material/select';
         MatIconModule,
         MatDividerModule,
         MatRadioModule,
-        MatSelectModule
+        MatSelectModule,
+        MatListModule,
+        MatSnackBarModule
     ],
     exports: [
         MatCardModule,
@@ -29,7 +33,9 @@ import {MatSelectModule} from '@angular/material/select';
         MatIconModule,
         MatDividerModule,
         MatRadioModule,
-        MatSelectModule
+        MatSelectModule,
+        MatListModule,
+        MatSnackBarModule
     ]
 })
 export class MaterialModule {}

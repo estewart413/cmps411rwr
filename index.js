@@ -2,10 +2,10 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const path = require("path");
 require("dotenv").config({ path: "./.env" });
-//var Request = require("request");
 var app = express();
 app.use(bodyParser.json());
 
+//Had issues using the default MongoDB driver, so used mongoose
 const mongoose = require("mongoose");
 const uri = process.env.MONGODB_URI;
 mongoose.connect(
@@ -23,7 +23,7 @@ var server = app.listen(process.env.PORT || 8080, () => {
   var port = server.address().port;
   console.log("App now running on port", port);
 });
-
+//Map built angular projecto all paths
 app.use(express.static(__dirname + "/dist/angular-app"));
 
 app.get("/*", (req, res) => {
@@ -63,6 +63,7 @@ app.get("/quiz/:id", (req, res) => {
         handleError(res, err.message, "Failed to get quiz.");
       } else {
         if (res.status(200)) {
+          //Take string of type ObjectId(*string*) and change to *string*
           var parsedId = "" + docs._id;
           docs[0]._id = parsedId;
           res.json(docs[0]);
@@ -73,7 +74,7 @@ app.get("/quiz/:id", (req, res) => {
 app.post("/new/", (req, res) => {
   var ObjectId = require("mongodb").ObjectID;
   let body = req.body;
-  console.log(body);
+  body._id = new ObjectId();
   db.collection("cmps415").insertOne(body, (err, doc) => {
     if (err) {
       handleError(res, err.message, "Failed to create new quiz.");
@@ -86,41 +87,53 @@ app.post("/quiz/:id", (req, res) => {
   var ObjectId = require("mongodb").ObjectID;
   let id = req.params.id;
   let body = req.body;
+  let key = [];
+
   db.collection("cmps415")
     .find({ _id: new ObjectId(id) })
     .toArray((err, docs) => {
       if (err) {
         handleError(res, err.message, "Failed to get quiz.");
       } else {
-        res.status(200).json(docs)
-        /* docs[0].questions.forEach((question) => {
-          for(var i = 0;i<body.length;i++){
-          if (
-            body[i].answer === question.correctanswer &&
+        //Need to iterate each question and each answer in pairs.
+        //ForEach would iterate all answers for each question, so used counter instead
+        let count = 1;
+        docs[0].questions.forEach((question) => {      
+          answer = body[count-1].answer;
+          if (answer === undefined) {
+          } else if (
+            answer === question.correctanswer &&
             question.type !== "multiplechoicemultiple"
           ) {
-            res.status(200).send(`Question ${i} answered correctly!`);
+            key.push({ count: `Question ${count} answered correctly` });
+            count++;
           } 
-          else if (question.type === "multiplechoicemultiple") {
-            var attempt= body[i].answer.split(",");
+            //if Multiple Choice - Multiple Answer, submitted answers could be in different order from stored correct answer
+            //This checks to make sure each value in answer matches each value in the correct answer
+            else if (question.type === "multiplechoicemultiple") {
+            var attempt = answer.split(",");
             var correct = question.correctanswer.split(",");
             if (
               attempt.length === correct.length &&
               correct.every((value) => attempt.includes(value))
             ) {
-              res.status(200).send(`Question ${i} answered correctly!`);
+              key.push({ count: `Question ${count} answered correctly!` });
+              count++;
             } else {
-              res.status(200).send(
-                  `Question ${i} answered incorrectly.  The correct answer is ${question.correctanswer}.`
-                );
+              key.push({
+                count: `Question ${count} answered incorrectly.  The correct answer is ${question.correctanswer}.`,
+              });
+              count++;
             }
-          } 
-          else {
-            res.status(200).send(
-                `Question ${i} answered incorrectly.  The correct answer is ${question.correctanswer}.`
-              );
+          } else {
+            key.push({
+              count: `Question ${count} answered incorrectly.  The correct answer is ${question.correctanswer}.`,
+            });
+            count++;
           }
-        }}); */
+        });
+
+        res.status(200).send(key);
       }
     });
 });
